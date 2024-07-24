@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import React, { useContext, useEffect, useState } from 'react';
 import RichTextEditor from '../RichTextEditor';
 import { ResumeInfoContext } from '@/context/ResumeInfoContext';
+import { toast } from '@/components/ui/use-toast';
 
 const initialFormField = {
   title: "",
@@ -18,14 +19,37 @@ const ExperienceForm = ({ setNext }) => {
   const [experienceList, setExperienceList] = useState([{ ...initialFormField }]);
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
 
-  const onSave = (e) => {
+  const onSave = async (e) => {
     e.preventDefault();
     setNext(true);
-    toast({
-      title: "Experience Details Updated",
-      description: "Keep editing",
-    });
-  };
+
+    try {
+        const response = await fetch('http://localhost:3001/api/update-resume', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(resumeInfo),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update resume');
+        }
+
+        const data = await response.json();
+        toast({
+            title: "Personal Details Updated",
+            description: "Keep editing",
+        });
+    } catch (error) {
+        console.error('Error updating resume:', error);
+        toast({
+            title: "Error",
+            description: "Failed to update resume details",
+            variant: "destructive",
+        });
+    }
+};
 
   const handleChange = (index, event) => {
     const newEntries = experienceList.slice();
@@ -54,7 +78,7 @@ const ExperienceForm = ({ setNext }) => {
       ...resumeInfo,
       experience: experienceList
     });
-    console.log(experienceList);
+    console.log(resumeInfo);
   }, [experienceList]);
 
   return (

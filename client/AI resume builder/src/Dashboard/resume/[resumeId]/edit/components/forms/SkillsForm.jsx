@@ -5,6 +5,7 @@ import { ResumeInfoContext } from '@/context/ResumeInfoContext';
 import { Rating } from '@smastrom/react-rating';
 
 import '@smastrom/react-rating/style.css';
+import { toast } from '@/components/ui/use-toast';
 
 const formField = {
   name: "",
@@ -15,14 +16,37 @@ const SkillsForm = ({ setNext }) => {
   const [skillsList, setSkillsList] = useState([ { ...formField } ]);
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
 
-  const onSave = (e) => {
+  const onSave = async (e) => {
     e.preventDefault();
     setNext(true);
-    toast({
-      title: "Skills Details Updated",
-      description: "Keep editing",
-    });
-  };
+
+    try {
+        const response = await fetch('http://localhost:3001/api/update-resume', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(resumeInfo),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update resume');
+        }
+
+        const data = await response.json();
+        toast({
+            title: "Personal Details Updated",
+            description: "Keep editing",
+        });
+    } catch (error) {
+        console.error('Error updating resume:', error);
+        toast({
+            title: "Error",
+            description: "Failed to update resume details",
+            variant: "destructive",
+        });
+    }
+};
 
   const handleChange = (index, name, value) => {
     const newEntries = skillsList.slice();
