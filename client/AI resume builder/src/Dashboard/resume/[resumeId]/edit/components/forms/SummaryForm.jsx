@@ -65,7 +65,7 @@ const SummaryForm = ({setNext}) => {
             <Button variant="outline" className="border-primary text-primary gap-2 items-center hover:text-primary" onClick={generateSummaryAI}> <Brain/> Generate from AI</Button>
         </div> 
         <form onSubmit={onSave}>
-            <textarea name='summery' onChange={handleChange} className='w-[90%] m-8 h-100 border-2 border-primary'/>
+            <textarea name='summery' onChange={handleChange} className='w-[90%] m-8 h-100 border-2 border-primary' defaultValue={resumeInfo?.summery}/>
             <div className='col-span-2 flex justify-end'>
                 <Button type="submit">Save</Button>
             </div>

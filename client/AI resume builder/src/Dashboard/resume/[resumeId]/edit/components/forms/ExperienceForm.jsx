@@ -4,8 +4,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import RichTextEditor from '../RichTextEditor';
 import { ResumeInfoContext } from '@/context/ResumeInfoContext';
 import { toast } from '@/components/ui/use-toast';
+import { v4 as uuidv4 } from 'uuid';
 
 const initialFormField = {
+  id: uuidv4(),
   title: "",
   companyName: "",
   city: "",
@@ -16,40 +18,48 @@ const initialFormField = {
 };
 
 const ExperienceForm = ({ setNext }) => {
-  const [experienceList, setExperienceList] = useState([{ ...initialFormField }]);
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+  const [experienceList, setExperienceList] = useState([{ ...initialFormField }]);
+
+  useEffect(() => {
+    if (resumeInfo.experience && resumeInfo.experience.length > 0) {
+      setExperienceList(resumeInfo.experience);
+    } else {
+      setExperienceList([{ ...initialFormField }]);
+    }
+  }, []);
 
   const onSave = async (e) => {
     e.preventDefault();
     setNext(true);
 
     try {
-        const response = await fetch('http://localhost:3001/api/update-resume', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(resumeInfo),
-        });
+      const response = await fetch('http://localhost:3001/api/update-resume', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...resumeInfo, experience: experienceList }),
+      });
 
-        if (!response.ok) {
-            throw new Error('Failed to update resume');
-        }
+      if (!response.ok) {
+        throw new Error('Failed to update resume');
+      }
 
-        const data = await response.json();
-        toast({
-            title: "Personal Details Updated",
-            description: "Keep editing",
-        });
+      const data = await response.json();
+      toast({
+        title: "Personal Details Updated",
+        description: "Keep editing",
+      });
     } catch (error) {
-        console.error('Error updating resume:', error);
-        toast({
-            title: "Error",
-            description: "Failed to update resume details",
-            variant: "destructive",
-        });
+      console.error('Error updating resume:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update resume details",
+        variant: "destructive",
+      });
     }
-};
+  };
 
   const handleChange = (index, event) => {
     const newEntries = experienceList.slice();
@@ -59,7 +69,7 @@ const ExperienceForm = ({ setNext }) => {
   };
 
   const addExperience = () => {
-    setExperienceList([...experienceList, { ...initialFormField }]);
+    setExperienceList([...experienceList, { ...initialFormField, id: uuidv4() }]);
   };
 
   const removeExperience = () => {
@@ -78,7 +88,6 @@ const ExperienceForm = ({ setNext }) => {
       ...resumeInfo,
       experience: experienceList
     });
-    console.log(resumeInfo);
   }, [experienceList]);
 
   return (
@@ -87,7 +96,7 @@ const ExperienceForm = ({ setNext }) => {
       <p>Add Your Previous Job Experiences</p>
       <div>
         {experienceList.map((item, index) => (
-          <div key={index}>
+          <div key={item.id}>
             <div className='grid grid-cols-2 gap-4 border my-5 rounded-lg p-6'>
               <div>
                 <label className='text-sm font-medium mb-6'>Position</label>

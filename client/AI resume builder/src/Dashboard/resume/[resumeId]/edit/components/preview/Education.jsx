@@ -12,7 +12,15 @@ const Education = ({resumeInfo}) => {
               <h2 className='text-sm font-medium'>{val.degree} in {val.major}</h2>
               <span className='text-sm font-medium'>{val.startDate} - {val.endDate}</span>
           </div>
-          <div className="text-sm my-2" dangerouslySetInnerHTML={{__html:val?.description}}></div>
+          <div
+            className='text-sm my-2'
+            style={{
+              maxWidth: '100%', // Or any specific width you prefer
+              overflowWrap: 'break-word', // Break words if necessary to prevent overflow
+              wordBreak: 'break-word', // Ensure long words break
+            }}
+            dangerouslySetInnerHTML={{ __html: val?.workSummery }}
+          ></div>
 
       </div>
     ))}

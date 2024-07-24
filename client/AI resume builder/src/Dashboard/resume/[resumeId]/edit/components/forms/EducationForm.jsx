@@ -1,12 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React, { useContext, useEffect, useState } from 'react';
+import RichTextEditor from '../RichTextEditorEducation'; // Ensure you have this component for education descriptions
 import { ResumeInfoContext } from '@/context/ResumeInfoContext';
-import RichTextEditorEducation from '../RichTextEditorEducation';
 import { toast } from '@/components/ui/use-toast';
+import { v4 as uuidv4 } from 'uuid';
 
 const initialFormField = {
-  id: 1,
+  id: uuidv4(),
   universityName: '',
   startDate: '',
   endDate: '',
@@ -16,40 +17,48 @@ const initialFormField = {
 };
 
 const EducationForm = ({ setNext }) => {
-  const [educationList, setEducationList] = useState([{ ...initialFormField }]);
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+  const [educationList, setEducationList] = useState([{ ...initialFormField }]);
+
+  useEffect(() => {
+    if (resumeInfo.education && resumeInfo.education.length > 0) {
+      setEducationList(resumeInfo.education);
+    } else {
+      setEducationList([{ ...initialFormField }]);
+    }
+  }, []);
 
   const onSave = async (e) => {
     e.preventDefault();
     setNext(true);
 
     try {
-        const response = await fetch('http://localhost:3001/api/update-resume', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(resumeInfo),
-        });
+      const response = await fetch('http://localhost:3001/api/update-resume', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...resumeInfo, education: educationList }),
+      });
 
-        if (!response.ok) {
-            throw new Error('Failed to update resume');
-        }
+      if (!response.ok) {
+        throw new Error('Failed to update resume');
+      }
 
-        const data = await response.json();
-        toast({
-            title: "Personal Details Updated",
-            description: "Keep editing",
-        });
+      const data = await response.json();
+      toast({
+        title: "Education Details Updated",
+        description: "Keep editing",
+      });
     } catch (error) {
-        console.error('Error updating resume:', error);
-        toast({
-            title: "Error",
-            description: "Failed to update resume details",
-            variant: "destructive",
-        });
+      console.error('Error updating resume:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update education details",
+        variant: "destructive",
+      });
     }
-};
+  };
 
   const handleChange = (index, event) => {
     const newEntries = educationList.slice();
@@ -59,7 +68,7 @@ const EducationForm = ({ setNext }) => {
   };
 
   const addEducation = () => {
-    setEducationList([...educationList, { ...initialFormField }]);
+    setEducationList([...educationList, { ...initialFormField, id: uuidv4() }]);
   };
 
   const removeEducation = () => {
@@ -78,7 +87,6 @@ const EducationForm = ({ setNext }) => {
       ...resumeInfo,
       education: educationList
     });
-    console.log(educationList);
   }, [educationList]);
 
   return (
@@ -87,7 +95,7 @@ const EducationForm = ({ setNext }) => {
       <p>Add Your Education details</p>
       <div>
         {educationList.map((item, index) => (
-          <div key={index}>
+          <div key={item.id}>
             <div className='grid grid-cols-2 gap-4 border my-5 rounded-lg p-6'>
               <div>
                 <label className='text-sm font-medium mb-6'>University Name</label>
@@ -132,7 +140,7 @@ const EducationForm = ({ setNext }) => {
                 />
               </div>
               <div className='col-span-2'>
-                <RichTextEditorEducation
+                <RichTextEditor
                   index={index}
                   value={item.description}
                   onTextChange={e => handleTextEditor(e, index)}
