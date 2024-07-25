@@ -7,7 +7,7 @@ const experienceSchema = new mongoose.Schema({
     state: String,
     startDate: String,
     endDate: String,
-    workSummary: String
+    workSummery: String
 });
 
 module.exports = mongoose.model('Experience', experienceSchema);

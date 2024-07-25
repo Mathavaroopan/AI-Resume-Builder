@@ -4,13 +4,13 @@ import { ResumeInfoContext } from '@/context/ResumeInfoContext';
 import { Description } from '@radix-ui/react-dialog';
 import { Brain } from 'lucide-react';
 import React, { useContext, useState } from 'react'
-import { BtnBold, BtnItalic, Editor, EditorProvider, Toolbar } from 'react-simple-wysiwyg'
+import { BtnBold, BtnBulletList, BtnClearFormatting, BtnItalic, BtnLink, BtnNumberedList, BtnStrikeThrough, BtnStyles, BtnUnderline, Editor, EditorProvider, HtmlButton, Separator, Toolbar } from 'react-simple-wysiwyg'
 import { AIchatSession } from '../../../../../../service/AIModel'
 
 const prompt = "job title: {jobTitle}, depends on work experience, give summary for my resume in 4 lines. I want pure text that can be directly on my resume. Don't add any useless things. Don't write replace and all. The user will take care."
 
-const RichTextEditor = ({onTextChange, index}) => {
-    const [value, setValue] = useState();
+const RichTextEditor = ({onTextChange, index, item}) => {
+    const [value, setValue] = useState(item.workSummery);
     const {resumeInfo, setResumeInfo} = useContext(ResumeInfoContext);
     const generateSummaryAI = async () => {
         if(resumeInfo?.experience[index].title == null){
@@ -38,8 +38,14 @@ const RichTextEditor = ({onTextChange, index}) => {
         onTextChange(e)
       }}>
       <Toolbar>
-          <BtnBold />
+      <BtnBold />
           <BtnItalic />
+          <BtnUnderline />
+          <BtnStrikeThrough />
+          <Separator />
+          <BtnBulletList />
+          <Separator />
+          <BtnLink />
         </Toolbar>
       </Editor>
     </EditorProvider>

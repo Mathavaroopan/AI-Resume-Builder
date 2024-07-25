@@ -19,7 +19,7 @@ const Education = ({resumeInfo}) => {
               overflowWrap: 'break-word', // Break words if necessary to prevent overflow
               wordBreak: 'break-word', // Ensure long words break
             }}
-            dangerouslySetInnerHTML={{ __html: val?.workSummery }}
+            dangerouslySetInnerHTML={{ __html: val?.description }}
           ></div>
 
       </div>

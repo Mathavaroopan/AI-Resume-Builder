@@ -21,7 +21,8 @@ mongoose.connect('mongodb+srv://Mathavaroopan:Mathavaroopan@cluster0.cmtda25.mon
 
 app.post('/api/update-resume', async (req, res) => {
     const { resumeId, firstName, lastName, jobTitle, address, phone, email, summery, themeColor, education, experience, skills } = req.body;
-
+    console.log(education);
+    console.log(experience);
     if (!resumeId) {
         return res.status(400).send('Resume ID is required');
     }
@@ -147,7 +148,7 @@ app.get('/api/get-resume-details', async (req, res) => {
             startDate: exp.startDate,
             endDate: exp.endDate || '',
             currentlyWorking: !exp.endDate,
-            workSummary: exp.workSummary || 'No work summary provided'
+            workSummery: exp.workSummery || 'No work summary provided'
         }));
 
         res.send({

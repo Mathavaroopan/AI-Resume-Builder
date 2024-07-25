@@ -17,7 +17,7 @@ const Experience = ({ resumeInfo }) => {
               {val.companyName}, {val.city}, {val.state}
             </h2>
             <span className='text-sm font-medium'>
-              {val.startDate} {val.currentlyWorking ? 'present' : val.endDate}
+              {val.startDate} - {val.currentlyWorking ? 'present' : val.endDate}
             </span>
           </div>
           <div

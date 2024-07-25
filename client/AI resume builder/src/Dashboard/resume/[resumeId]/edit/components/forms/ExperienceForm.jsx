@@ -22,11 +22,15 @@ const ExperienceForm = ({ setNext }) => {
   const [experienceList, setExperienceList] = useState([{ ...initialFormField }]);
 
   useEffect(() => {
+    console.log(resumeInfo);
     if (resumeInfo.experience && resumeInfo.experience.length > 0) {
+      console.log("I'm here")
       setExperienceList(resumeInfo.experience);
+      console.log(experienceList);
     } else {
       setExperienceList([{ ...initialFormField }]);
     }
+    console.log(experienceList);
   }, []);
 
   const onSave = async (e) => {
@@ -39,7 +43,7 @@ const ExperienceForm = ({ setNext }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...resumeInfo, experience: experienceList }),
+        body: JSON.stringify(resumeInfo),
       });
 
       if (!response.ok) {
@@ -153,6 +157,7 @@ const ExperienceForm = ({ setNext }) => {
                   index={index}
                   value={item.workSummery}
                   onTextChange={e => handleTextEditor(e, index)}
+                  item={item}
                 />
               </div>
             </div>
