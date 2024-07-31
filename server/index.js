@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
+require('dotenv').config();
 
 const User = require('./models/User');
 const Resume = require('./models/Resume');
@@ -15,9 +16,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
+const mongoURI = process.env.MONGODB_URI;
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://Mathavaroopan:Mathavaroopan@cluster0.cmtda25.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.post('/api/update-resume', async (req, res) => {
     const { resumeId, firstName, lastName, jobTitle, address, phone, email, summery, themeColor, education, experience, skills } = req.body;
