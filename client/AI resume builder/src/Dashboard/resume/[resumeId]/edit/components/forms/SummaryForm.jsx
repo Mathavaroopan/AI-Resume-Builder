@@ -4,13 +4,15 @@ import { ResumeInfoContext } from '@/context/ResumeInfoContext';
 import { Brain } from 'lucide-react';
 import React, { useContext, useState } from 'react';
 import { AIchatSession } from '../../../../../../../service/AIModel';
+import { Input } from '@/components/ui/input';
 
-const prompt = "job title: {jobTitle} using mern stack. give summary for my resume focused on skills only in 4 lines";
+const p = "I'm applying for the role job title: {jobTitle}. Give quick intro section for my resume focused on skills only in 4 lines";
 
 const SummaryForm = ({ setNext }) => {
     const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
     const [summeryValue, setSummeryValue] = useState(resumeInfo?.summery);
-
+    const [prompt, setPrompt] = useState("");
+    
     const handleChange = (e) => {
         setNext(false);
         const { name, value } = e.target;
@@ -22,7 +24,8 @@ const SummaryForm = ({ setNext }) => {
     };
 
     const generateSummaryAI = async () => {
-        const PROMPT = prompt.replace("{jobTitle}", resumeInfo?.jobTitle);
+        let PROMPT = p.replace("{jobTitle}", resumeInfo?.jobTitle);
+        PROMPT += prompt
         const result = await AIchatSession.sendMessage(PROMPT);
         const generatedSummary = await result.response.text();
 
@@ -67,15 +70,14 @@ const SummaryForm = ({ setNext }) => {
 
     return (
         <div className='border-t-primary border-t-4 my-10 p-4 rounded-lg shadow-lg'>
-            <div className='flex justify-between items-center'>
-                <div>
-                    <h2 className='font-bold text-xl my-2'>Summary</h2>
-                    <p>Add A Summary For Your Job Title</p>
-                </div>
-                <Button variant="outline" className="border-primary text-primary gap-2 items-center hover:text-primary" onClick={generateSummaryAI}> 
-                    <Brain/> Generate from AI
-                </Button>
+            <div>
+                <h2 className='font-bold text-xl my-2'>Summary</h2>
+                <p>Add A Summary For Your Job Title</p>
             </div>
+            <div className='flex justify-between my-2 items-center gap-6'>
+                    <Input placeholder={(prompt == "") ? "Give details to generate summary..." : prompt} onChange={e => setPrompt(e.target.value)}/>
+                    <Button variant="outline" disabled={prompt == ""} className="text-primary flex gap-2 border-primary" onClick={generateSummaryAI}><Brain className='h-4 w-4'/> Generate From AI</Button>
+                </div>
             <form onSubmit={onSave}>
                 <textarea
                     name='summery'

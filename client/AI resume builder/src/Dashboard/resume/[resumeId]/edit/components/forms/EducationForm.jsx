@@ -144,7 +144,7 @@ const EducationForm = ({ setNext }) => {
               <div className='col-span-2'>
                 <RichTextEditorEducation
                   index={index}
-                  defaultValue={item.description}
+                  value={item.description}
                   onTextChange={(e, idx) => handleTextEditor(e, idx)}
                   item={item}
                 />
