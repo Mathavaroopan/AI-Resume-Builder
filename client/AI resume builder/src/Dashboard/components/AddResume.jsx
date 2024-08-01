@@ -30,7 +30,7 @@ const AddResume = () => {
             userName: user?.fullName
         };
         try {
-            await axios.post('http://localhost:3001/api/create-resume', data);
+            await axios.post(`${import.meta.env.REACT_APP_API_BASE_URL}/create-resume`, data);
             // Handle successful response, e.g., notify user, close dialog, etc.
             console.log("Resume created successfully");
         } catch (error) {

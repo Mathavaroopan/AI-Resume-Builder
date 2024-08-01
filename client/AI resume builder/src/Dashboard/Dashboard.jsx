@@ -7,11 +7,13 @@ import axios from 'axios'
 const Dashboard = () => {
   const { user } = useUser();
   const [resumeIds, setResumeIds] = useState([]);
+  console.log(`${import.meta.env.REACT_APP_API_BASE_URL}/get-resume-ids`);
+  console.log(`${import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}/get-resume-ids`);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/api/get-resume-ids', {
+        const response = await axios.post(`${import.meta.env.REACT_APP_API_BASE_URL}/get-resume-ids`, {
           userEmail: user?.primaryEmailAddress?.emailAddress
         });
         setResumeIds(response.data);
