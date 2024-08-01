@@ -21,7 +21,7 @@ const PersonalForm = ({ setNext }) => {
         setNext(true);
 
         try {
-            const response = await fetch(`${import.meta.env.REACT_APP_API_BASE_URL}/update-resume`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/update-resume`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
