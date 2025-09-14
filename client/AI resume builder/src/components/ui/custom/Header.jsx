@@ -13,7 +13,7 @@ const Header = () => {
           const email = user?.primaryEmailAddress?.emailAddress;
           const fullName = user?.fullName;
           console.log("sending request")
-          axios.post('http://localhost:3001/api/check-or-create-user', { email, fullName })
+          axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/check-or-create-user`, { email, fullName })
               .then(response => {
                   console.log(response.data);
               })

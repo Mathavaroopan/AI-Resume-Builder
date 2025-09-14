@@ -8,9 +8,9 @@ const ResumeCard = ({resume}) => {
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/api/get-resume-details', {
+            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/get-resume-details`, {
                 params: {
-                    resumeId: resume // Pass resumeId as a query parameter
+                    resumeId: resume
                 }
             });
             console.log(response.data.jobTitle);
@@ -19,7 +19,6 @@ const ResumeCard = ({resume}) => {
             console.log("Resume details fetched successfully");
         } catch (error) {
             console.error('Error fetching resume details:', error);
-            // Handle error response, e.g., show an error message
         }
     };
 
